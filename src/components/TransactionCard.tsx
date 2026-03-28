@@ -1,4 +1,6 @@
+import { useAppSelector } from '@/hooks/useRedux';
 import { Transaction } from '@/types';
+import { formatCurrency } from '@/utils/currency';
 import { format } from 'date-fns';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -15,9 +17,11 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
 	onEdit,
 	onDelete,
 }) => {
+	const currency = useAppSelector((state) => state.settings.currency);
 	const isIncome = transaction.type === 'income';
 	const amountColor = isIncome ? '#4CAF50' : '#F44336';
 	const amountPrefix = isIncome ? '+' : '-';
+	const formattedAmount = `${amountPrefix}${formatCurrency(transaction.amount, currency)}`;
 
 	return (
 		<Card style={styles.card}>
@@ -38,7 +42,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
 						variant='titleMedium'
 						style={[styles.amount, { color: amountColor }]}
 					>
-						{amountPrefix}₹{transaction.amount.toFixed(2)}
+						{formattedAmount}
 					</Text>
 				</View>
 			</Card.Content>

@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import budgetsReducer from './budgetsSlice';
 import filtersReducer from './filtersSlice';
+import settingsReducer from './settingsSlice';
 import transactionsReducer from './transactionsSlice';
 
 export const store = configureStore({
@@ -8,6 +9,7 @@ export const store = configureStore({
 		transactions: transactionsReducer,
 		budgets: budgetsReducer,
 		filters: filtersReducer,
+		settings: settingsReducer,
 	},
 });
 

@@ -1,7 +1,8 @@
-import { useAppDispatch } from '@/hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { useMonthlyStats, useTransactionStats } from '@/hooks/useTransactions';
 import { storageService } from '@/services/storage';
 import { setTransactions } from '@/store/transactionsSlice';
+import { formatCurrency, formatCurrencyNoDecimal } from '@/utils/currency';
 import { useEffect } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { Appbar, Card, Text } from 'react-native-paper';
@@ -14,6 +15,7 @@ const CHART_COLORS = {
 
 export default function AnalyticsScreen({ navigation }: any) {
 	const dispatch = useAppDispatch();
+	const currency = useAppSelector((state) => state.settings.currency);
 	const monthlyStats = useMonthlyStats();
 	const { byCategory } = useTransactionStats();
 
@@ -57,7 +59,7 @@ export default function AnalyticsScreen({ navigation }: any) {
 													color: CHART_COLORS.income,
 												}}
 											>
-												In: ₹{stats.income.toFixed(0)}
+												In: {formatCurrencyNoDecimal(stats.income, currency)}
 											</Text>
 											<Text
 												style={{
@@ -65,7 +67,7 @@ export default function AnalyticsScreen({ navigation }: any) {
 													color: CHART_COLORS.expense,
 												}}
 											>
-												Out: ₹{stats.expense.toFixed(0)}
+												Out: {formatCurrencyNoDecimal(stats.expense, currency)}
 											</Text>
 										</View>
 									</View>
@@ -91,7 +93,7 @@ export default function AnalyticsScreen({ navigation }: any) {
 									<View key={category} style={styles.categoryRow}>
 										<Text variant='bodyMedium'>{category}</Text>
 										<Text variant='bodyMedium' style={styles.categoryAmount}>
-											₹{amount.toFixed(2)}
+											{formatCurrency(amount, currency)}
 										</Text>
 									</View>
 								))

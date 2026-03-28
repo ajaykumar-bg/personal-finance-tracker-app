@@ -1,8 +1,11 @@
+import { DEFAULT_CURRENCY } from '@/data/currencies';
 import { Budget, Transaction } from '@/types';
+import { Currency } from '@/types/settings';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TRANSACTIONS_KEY = '@fin_tracker_transactions';
 const BUDGETS_KEY = '@fin_tracker_budgets';
+const SETTINGS_KEY = '@fin_tracker_settings';
 
 export const storageService = {
 	// Transactions
@@ -115,6 +118,33 @@ export const storageService = {
 			await AsyncStorage.removeItem(BUDGETS_KEY);
 		} catch (error) {
 			console.error('Error clearing data:', error);
+			throw error;
+		}
+	},
+
+	// Settings
+	async getCurrency(): Promise<Currency> {
+		try {
+			const data = await AsyncStorage.getItem(SETTINGS_KEY);
+			if (data) {
+				const settings = JSON.parse(data);
+				return settings.currency || DEFAULT_CURRENCY;
+			}
+			return DEFAULT_CURRENCY;
+		} catch (error) {
+			console.error('Error reading currency:', error);
+			return DEFAULT_CURRENCY;
+		}
+	},
+
+	async setCurrency(currency: Currency): Promise<void> {
+		try {
+			const existing = await AsyncStorage.getItem(SETTINGS_KEY);
+			const settings = existing ? JSON.parse(existing) : {};
+			settings.currency = currency;
+			await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+		} catch (error) {
+			console.error('Error saving currency:', error);
 			throw error;
 		}
 	},
