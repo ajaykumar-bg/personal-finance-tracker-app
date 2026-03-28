@@ -7,6 +7,7 @@ import AddTransactionScreen from '@/app/add-transaction';
 import AnalyticsScreen from '@/app/analytics';
 import BudgetScreen from '@/app/budget';
 import DashboardScreen from '@/app/dashboard';
+import SettingsScreen from '@/app/settings';
 import TransactionsScreen from '@/app/transactions';
 import { Colors } from '@/constants/theme';
 
@@ -77,6 +78,22 @@ const BudgetStack = () => {
 	);
 };
 
+const SettingsStack = () => {
+	return (
+		<Stack.Navigator
+			screenOptions={{
+				headerShown: false,
+			}}
+		>
+			<Stack.Screen
+				name='settings-home'
+				component={SettingsScreen}
+				options={{ title: 'Settings' }}
+			/>
+		</Stack.Navigator>
+	);
+};
+
 export default function AppTabs() {
 	const scheme = useColorScheme();
 	const colorScheme =
@@ -96,6 +113,8 @@ export default function AppTabs() {
 						iconName = 'chart-line';
 					} else if (route.name === 'Budgets') {
 						iconName = 'credit-card';
+					} else if (route.name === 'Settings') {
+						iconName = 'cog-outline';
 					}
 
 					return (
@@ -129,6 +148,13 @@ export default function AppTabs() {
 				component={BudgetStack}
 				options={{
 					tabBarLabel: 'Budgets',
+				}}
+			/>
+			<Tab.Screen
+				name='Settings'
+				component={SettingsStack}
+				options={{
+					tabBarLabel: 'Settings',
 				}}
 			/>
 		</Tab.Navigator>

@@ -46,13 +46,11 @@ export default function DashboardScreen({ navigation }: any) {
 
 				<StatsCard
 					stats={[
-						{ label: 'Income', value: income.toFixed(2), color: '#4CAF50' },
-						{ label: 'Expense', value: expense.toFixed(2), color: '#F44336' },
-						{
-							label: 'Balance',
-							value: balance.toFixed(2),
-							color: balance >= 0 ? '#2196F3' : '#FF9800',
-						},
+					{ label: 'Income', value: income, color: '#4CAF50' },
+					{ label: 'Expense', value: expense, color: '#F44336' },
+					{
+						label: 'Balance',
+						value: balance,
 					]}
 				/>
 

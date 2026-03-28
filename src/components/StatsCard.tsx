@@ -1,10 +1,12 @@
+import { useAppSelector } from '@/hooks/useRedux';
+import { formatCurrency } from '@/utils/currency';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 
 interface StatItem {
 	label: string;
-	value: string;
+	value: number;
 	color?: string;
 }
 
@@ -13,6 +15,8 @@ interface StatsCardProps {
 }
 
 export const StatsCard: React.FC<StatsCardProps> = ({ stats }) => {
+	const currency = useAppSelector((state) => state.settings.currency);
+
 	return (
 		<Card style={styles.card}>
 			<Card.Content>
@@ -26,7 +30,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({ stats }) => {
 								variant='headlineMedium'
 								style={[styles.value, stat.color && { color: stat.color }]}
 							>
-								₹{stat.value}
+								{formatCurrency(stat.value, currency)}
 							</Text>
 						</View>
 					))}
