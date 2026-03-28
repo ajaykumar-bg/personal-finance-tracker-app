@@ -2,9 +2,7 @@ import {
 	DarkTheme,
 	DefaultTheme,
 	NavigationContainer,
-	ThemeProvider,
 } from '@react-navigation/native';
-import React from 'react';
 import { useColorScheme } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { Provider as ReduxProvider } from 'react-redux';
