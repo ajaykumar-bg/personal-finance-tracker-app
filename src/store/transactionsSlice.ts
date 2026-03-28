@@ -1,3 +1,4 @@
+import { mockTransactions } from '@/data/mockTransactions';
 import { Transaction } from '@/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -8,7 +9,7 @@ interface TransactionsState {
 }
 
 const initialState: TransactionsState = {
-	items: [],
+	items: mockTransactions,
 	loading: false,
 	error: null,
 };
