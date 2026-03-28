@@ -1,6 +1,7 @@
 import {
 	DarkTheme,
 	DefaultTheme,
+	NavigationContainer,
 	ThemeProvider,
 } from '@react-navigation/native';
 import React from 'react';
@@ -16,11 +17,11 @@ export default function TabLayout() {
 	return (
 		<ReduxProvider store={store}>
 			<PaperProvider>
-				<ThemeProvider
-					value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+				<NavigationContainer
+					theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
 				>
 					<AppTabs />
-				</ThemeProvider>
+				</NavigationContainer>
 			</PaperProvider>
 		</ReduxProvider>
 	);
