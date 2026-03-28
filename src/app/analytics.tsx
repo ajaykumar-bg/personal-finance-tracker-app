@@ -2,16 +2,9 @@ import { useAppDispatch } from '@/hooks/useRedux';
 import { useMonthlyStats, useTransactionStats } from '@/hooks/useTransactions';
 import { storageService } from '@/services/storage';
 import { setTransactions } from '@/store/transactionsSlice';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { Appbar, Card, Text } from 'react-native-paper';
-import {
-	VictoryAxis,
-	VictoryBar,
-	VictoryChart,
-	VictoryPie,
-	VictoryTheme,
-} from 'victory-native';
 
 const CHART_COLORS = {
 	expense: '#F44336',
@@ -32,89 +25,54 @@ export default function AnalyticsScreen({ navigation }: any) {
 		loadTransactions();
 	}, [dispatch]);
 
-	// Prepare data for monthly chart
-	const monthlyData = Object.entries(monthlyStats)
-		.sort()
-		.slice(-6) // Last 6 months
-		.map(([month, stats]) => ({
-			x: month.substring(5), // MM format
-			y: stats.expense,
-			y1: stats.income,
-		}));
-
-	// Prepare data for category pie chart
-	const categoryData = Object.entries(byCategory).map(([category, amount]) => ({
-		x: category,
-		y: amount,
-	}));
-
 	return (
 		<SafeAreaView style={styles.container}>
 			<Appbar.Header>
-				<Appbar.BackAction onPress={() => navigation.goBack()} />
 				<Appbar.Content title='Analytics' />
 			</Appbar.Header>
 
 			<ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-				{/* Monthly Spending Chart */}
+				{/* Monthly Statistics */}
 				<Card style={styles.card}>
 					<Card.Content>
 						<Text variant='titleMedium' style={styles.chartTitle}>
-							Monthly Spending Trends (Last 6 Months)
+							Monthly Spending Summary (Last 6 Months)
 						</Text>
-						{monthlyData.length > 0 ? (
-							<View style={styles.chartContainer}>
-								<VictoryChart theme={VictoryTheme.material} height={300}>
-									<VictoryAxis />
-									<VictoryAxis dependentAxis />
-									<VictoryBar
-										data={monthlyData}
-										x='x'
-										y='y'
-										style={{
-											data: { fill: CHART_COLORS.expense, width: 15 },
-										}}
-									/>
-								</VictoryChart>
-							</View>
+						{Object.entries(monthlyStats).length > 0 ? (
+							Object.entries(monthlyStats)
+								.sort()
+								.slice(-6)
+								.map(([month, stats]) => (
+									<View key={month} style={styles.monthRow}>
+										<Text variant='bodyMedium' style={styles.monthLabel}>
+											{new Date(month + '-01').toLocaleDateString('en-US', {
+												month: 'short',
+												year: 'numeric',
+											})}
+										</Text>
+										<View style={styles.monthStats}>
+											<Text
+												style={{
+													...styles.statValue,
+													color: CHART_COLORS.income,
+												}}
+											>
+												In: ₹{stats.income.toFixed(0)}
+											</Text>
+											<Text
+												style={{
+													...styles.statValue,
+													color: CHART_COLORS.expense,
+												}}
+											>
+												Out: ₹{stats.expense.toFixed(0)}
+											</Text>
+										</View>
+									</View>
+								))
 						) : (
 							<Text variant='bodyMedium' style={styles.noData}>
 								No data available
-							</Text>
-						)}
-					</Card.Content>
-				</Card>
-
-				{/* Category Distribution Pie Chart */}
-				<Card style={styles.card}>
-					<Card.Content>
-						<Text variant='titleMedium' style={styles.chartTitle}>
-							Spending by Category
-						</Text>
-						{categoryData.length > 0 ? (
-							<View style={styles.chartContainer}>
-								<VictoryPie
-									data={categoryData}
-									theme={VictoryTheme.material}
-									height={300}
-									innerRadius={80}
-									colorScale={[
-										'#FF6B6B',
-										'#FFA500',
-										'#FFD700',
-										'#69B34C',
-										'#4CAF50',
-										'#2196F3',
-										'#1E88E5',
-										'#1565C0',
-										'#6A1B9A',
-										'#E91E63',
-									]}
-								/>
-							</View>
-						) : (
-							<Text variant='bodyMedium' style={styles.noData}>
-								No expense data available
 							</Text>
 						)}
 					</Card.Content>
@@ -124,7 +82,7 @@ export default function AnalyticsScreen({ navigation }: any) {
 				<Card style={styles.card}>
 					<Card.Content>
 						<Text variant='titleMedium' style={styles.chartTitle}>
-							Category Breakdown
+							Spending by Category
 						</Text>
 						{Object.entries(byCategory).length > 0 ? (
 							Object.entries(byCategory)
@@ -164,13 +122,29 @@ const styles = StyleSheet.create({
 		marginBottom: 12,
 		fontWeight: 'bold',
 	},
-	chartContainer: {
-		alignItems: 'center',
-	},
 	noData: {
 		textAlign: 'center',
 		opacity: 0.6,
 		paddingVertical: 24,
+	},
+	monthRow: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		paddingVertical: 12,
+		borderBottomWidth: 1,
+		borderBottomColor: '#EEEEEE',
+	},
+	monthLabel: {
+		fontWeight: '500',
+	},
+	monthStats: {
+		flexDirection: 'row',
+		gap: 16,
+	},
+	statValue: {
+		fontWeight: 'bold',
+		fontSize: 14,
 	},
 	categoryRow: {
 		flexDirection: 'row',

@@ -1,7 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
 import { useColorScheme } from 'react-native';
 
 import AddTransactionScreen from '@/app/add-transaction';
@@ -80,14 +79,16 @@ const BudgetStack = () => {
 
 export default function AppTabs() {
 	const scheme = useColorScheme();
-	const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+	const colorScheme =
+		scheme === 'light' || scheme === 'dark' ? scheme : 'light';
+	const colors = Colors[colorScheme];
 
 	return (
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
 				headerShown: false,
 				tabBarIcon: ({ color, size }) => {
-					let iconName = 'home';
+					let iconName: keyof typeof MaterialCommunityIcons.glyphMap = 'home';
 
 					if (route.name === 'Dashboard') {
 						iconName = 'home-outline';

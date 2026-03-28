@@ -34,6 +34,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 	const [category, setCategory] = useState<TransactionCategory>(
 		initialData?.category || 'Food',
 	);
+	const [type, setType] = useState<TransactionType>(
+		initialData?.type || 'expense',
+	);
 	const [date, setDate] = useState(
 		initialData?.date || new Date().toISOString().split('T')[0],
 	);
@@ -110,8 +113,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 			<TextInput
 				label='Category'
 				value={category}
-				disabled
-				onMessagePress={() => {}}
+				editable={false}
 				style={styles.input}
 			/>
 

@@ -1,9 +1,10 @@
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { useTransactionStats } from '@/hooks/useTransactions';
 import { storageService } from '@/services/storage';
 import { setBudgets } from '@/store/budgetsSlice';
 import { Budget, TransactionCategory } from '@/types';
 import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	Alert,
 	SafeAreaView,
@@ -17,6 +18,7 @@ import {
 	Card,
 	Dialog,
 	FAB,
+	IconButton,
 	Portal,
 	ProgressBar,
 	Text,
@@ -36,6 +38,7 @@ const CATEGORIES: TransactionCategory[] = [
 export default function BudgetScreen({ navigation }: any) {
 	const dispatch = useAppDispatch();
 	const budgets = useAppSelector((state) => state.budgets.items);
+	const { byCategory } = useTransactionStats();
 
 	const [dialogVisible, setDialogVisible] = useState(false);
 	const [selectedCategory, setSelectedCategory] =
@@ -116,10 +119,9 @@ export default function BudgetScreen({ navigation }: any) {
 					<View style={styles.budgetHeader}>
 						<Text variant='titleMedium'>{category}</Text>
 						{budget && (
-							<Button
+							<IconButton
 								icon='delete'
-								compact
-								textColor='#F44336'
+								iconColor='#F44336'
 								onPress={() => handleDeleteBudget(budget.id)}
 							/>
 						)}
